@@ -8,7 +8,7 @@ This repository hosts a react native project for the beginner .
 * "react-native": "0.62.2"
 * Visual Studio Code 
 
-## Open Visual Studio Code 
+## Open with Visual Studio Code 
 
 If you want to import these project into your local IDE setup - 
 
