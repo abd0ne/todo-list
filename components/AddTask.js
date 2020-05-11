@@ -5,9 +5,12 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {addTask} from '../actions/task';
 
-const AddTask = ({title, addItem}) => {
+const AddTask = props => {
   const [text, setText] = useState('');
   const onChange = textValue => setText(textValue);
 
@@ -18,7 +21,15 @@ const AddTask = ({title, addItem}) => {
         style={styles.input}
         onChangeText={onChange}
       />
-      <TouchableOpacity style={styles.button} onPress={() => addItem(text)}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          if (text) {
+            props.add(text);
+          } else {
+            Alert.alert('Error', 'You must add text', {text: 'OK'});
+          }
+        }}>
         <Text style={styles.buttonText}>Add Task</Text>
       </TouchableOpacity>
     </View>
@@ -43,4 +54,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddTask;
+const mapStateToProps = state => {
+  return {
+    tasks: state.taskReducer.taskList,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    add: task => dispatch(addTask(task)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddTask);

@@ -1,36 +1,20 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Alert} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, FlatList} from 'react-native';
 import Header from './Header';
 import ListTask from './ListTask';
 import AddTask from './AddTask';
+import {connect} from 'react-redux';
+import {deleteTask} from '../actions/task';
 
-const TodoScreen = () => {
-  const [items, setItems] = useState([{id: Math.random(), text: 'My task'}]);
-
-  const deleteItem = id => {
-    setItems(prevItems => {
-      return prevItems.filter(item => item.id !== id);
-    });
-  };
-
-  const addItem = text => {
-    if (!text) {
-      Alert.alert('Error', 'You must add text', {text: 'OK'});
-    } else {
-      setItems(prevItems => {
-        return [{id: Math.random(), text}, ...prevItems];
-      });
-    }
-  };
-
+const TodoScreen = props => {
   return (
     <View style={styles.container}>
       <Header />
-      <AddTask addItem={addItem} />
+      <AddTask addItem={() => props.add('test')} />
       <FlatList
-        data={items}
+        data={props.tasks}
         renderItem={({item}) => (
-          <ListTask item={item} deleteItem={deleteItem} />
+          <ListTask item={item} deleteItem={() => props.delete(item.id)} />
         )}
         keyExtractor={item => item.id.toString()}
       />
@@ -45,4 +29,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TodoScreen;
+const mapStateToProps = state => {
+  return {
+    tasks: state.taskReducer.taskList,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    delete: id => dispatch(deleteTask(id)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TodoScreen);
