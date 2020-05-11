@@ -1,56 +1,47 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, TextInput, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {addTask} from '../actions/task';
+import Button from './Button';
 
 const AddTask = props => {
   const [text, setText] = useState('');
   const onChange = textValue => setText(textValue);
 
+  const create = val => {
+    if (val) {
+      props.add(val);
+    } else {
+      Alert.alert('ERROR', 'You must add text', {text: 'OK'});
+    }
+  };
+
   return (
-    <View style={styles.header}>
+    <View style={styles.container}>
       <TextInput
         placeholder="Add task ..."
         style={styles.input}
         onChangeText={onChange}
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          if (text) {
-            props.add(text);
-          } else {
-            Alert.alert('Error', 'You must add text', {text: 'OK'});
-          }
-        }}>
-        <Text style={styles.buttonText}>Add Task</Text>
-      </TouchableOpacity>
+      <Button
+        label="ADD TASK"
+        width={160}
+        backgroundColor="#00a896"
+        handleOnPress={() => create(text)}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   input: {
     height: 60,
     padding: 8,
     fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#00a896',
-    padding: 9,
-    margin: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    textAlign: 'center',
   },
 });
 
