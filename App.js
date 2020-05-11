@@ -1,48 +1,20 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Alert} from 'react-native';
-import Header from './components/Header';
-import ListTask from './components/ListTask';
-import AddTask from './components/AddTask';
+import 'react-native-gesture-handler';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import HomeScreen from './components/HomeScreen';
+import TodoScreen from './components/TodoScreen';
 
 const App = () => {
-  const [items, setItems] = useState([{id: Math.random(), text: 'My task'}]);
-
-  const deleteItem = id => {
-    setItems(prevItems => {
-      return prevItems.filter(item => item.id !== id);
-    });
-  };
-
-  const addItem = text => {
-    if (!text) {
-      Alert.alert('Error', 'You must add text', {text: 'OK'});
-    } else {
-      setItems(prevItems => {
-        return [{id: Math.random(), text}, ...prevItems];
-      });
-    }
-  };
-
+  const Stack = createStackNavigator();
   return (
-    <View style={styles.container}>
-      <Header />
-      <AddTask addItem={addItem} />
-      <FlatList
-        data={items}
-        renderItem={({item}) => (
-          <ListTask item={item} deleteItem={deleteItem} />
-        )}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Todo" component={TodoScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 60,
-    flex: 1,
-  },
-});
 
 export default App;
